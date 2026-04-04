@@ -1,0 +1,210 @@
+{
+  "project": "Test Run",
+  "target": "httpbin",
+  "url": "https://httpbin.org/post",
+  "started_at": "2026-04-04T18:10:03.744763",
+  "ended_at": "2026-04-04T18:10:32.019836",
+  "summary": {
+    "PASS": 13,
+    "FAIL": 4,
+    "INFO": 0,
+    "ERROR": 0,
+    "SKIP": 0
+  },
+  "results": [
+    {
+      "timestamp": "2026-04-04T18:10:05.054450",
+      "source_type": "template",
+      "source": "Allowed Content-Type",
+      "check": "accepts application/json",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:06.335569",
+      "source_type": "template",
+      "source": "Allowed Content-Type",
+      "check": "accepts application/x-www-form-urlencoded",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:07.619527",
+      "source_type": "template",
+      "source": "Allowed Content-Type",
+      "check": "accepts text/plain",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:08.811227",
+      "source_type": "template",
+      "source": "Allowed Content-Type",
+      "check": "accepts text/html",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:10.337197",
+      "source_type": "template",
+      "source": "Allowed Content-Type",
+      "check": "accepts application/xml",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:11.456691",
+      "source_type": "template",
+      "source": "Allowed Content-Type",
+      "check": "accepts multipart/form-data",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:12.734580",
+      "source_type": "template",
+      "source": "API Version Exposure",
+      "check": "v1 not exposed",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 404
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:13.856405",
+      "source_type": "template",
+      "source": "API Version Exposure",
+      "check": "v2 not exposed",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 404
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:15.139400",
+      "source_type": "template",
+      "source": "API Version Exposure",
+      "check": "v3 not exposed",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 404
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:16.417389",
+      "source_type": "template",
+      "source": "API Version Exposure",
+      "check": "v4 not exposed",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 404
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:17.671251",
+      "source_type": "template",
+      "source": "API Version Exposure",
+      "check": "api/v1 not exposed",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 404
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:18.817627",
+      "source_type": "template",
+      "source": "API Version Exposure",
+      "check": "api/v2 not exposed",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 404
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:20.106248",
+      "source_type": "template",
+      "source": "API Version Exposure",
+      "check": "api not exposed",
+      "status": "PASS",
+      "detail": null,
+      "evidence": {
+        "status": 404
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:21.374741",
+      "source_type": "workflow",
+      "source": "CORS Bypass",
+      "check": "origin reflected: https://evil.com",
+      "status": "FAIL",
+      "detail": "Server mirrors attacker origin",
+      "evidence": {
+        "ACAO": "https://evil.com",
+        "ACAC": "true",
+        "origin_sent": "https://evil.com"
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:22.815813",
+      "source_type": "workflow",
+      "source": "CORS Bypass",
+      "check": "origin reflected: null",
+      "status": "FAIL",
+      "detail": "Server mirrors attacker origin",
+      "evidence": {
+        "ACAO": "null",
+        "ACAC": "true",
+        "origin_sent": "null"
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:24.050539",
+      "source_type": "workflow",
+      "source": "CORS Bypass",
+      "check": "origin reflected: https://attacker.com",
+      "status": "FAIL",
+      "detail": "Server mirrors attacker origin",
+      "evidence": {
+        "ACAO": "https://attacker.com",
+        "ACAC": "true",
+        "origin_sent": "https://attacker.com"
+      }
+    },
+    {
+      "timestamp": "2026-04-04T18:10:26.671095",
+      "source_type": "workflow",
+      "source": "Parameter Fuzzer",
+      "check": "param 'q' reflects payload",
+      "status": "FAIL",
+      "detail": null,
+      "evidence": {
+        "payload": "\"",
+        "status": 405
+      }
+    }
+  ]
+}
