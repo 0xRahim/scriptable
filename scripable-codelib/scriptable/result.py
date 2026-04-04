@@ -2,6 +2,7 @@ import json
 import os
 from datetime import datetime
 from enum import Enum
+import threading
 
 class Status(str, Enum):
     PASS  = "PASS"
@@ -27,6 +28,7 @@ class ResultCollector:
         self.target_url   = target_url
         self.started_at   = datetime.utcnow().isoformat()
         self.entries      = []
+        self._lock = threading.Lock()
 
     def add(self, *, source, source_type, check, status: Status,
             detail=None, evidence=None):
@@ -39,8 +41,9 @@ class ResultCollector:
             "detail":      detail,
             "evidence":    evidence or {},
         }
-        self.entries.append(entry)
-        self._print(entry)
+        with self._lock:                 # ← wrap both append and print
+            self.entries.append(entry)
+            self._print(entry)
         return entry
 
     def _print(self, entry):

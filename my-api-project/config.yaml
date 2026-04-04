@@ -1,4 +1,4 @@
-project: "Test Run"
+project: "My API Tests"
 
 targets:
   - name: "httpbin"
@@ -13,3 +13,9 @@ run:
 
 skip:
   templates: []
+
+# NEW
+execution:
+  mode: threaded        # "sequential" or "threaded"
+  max_workers: 5        # ignored in sequential mode
+  delay: 0.2            # seconds between thread submissions, 0 = no delay

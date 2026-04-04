@@ -1,0 +1,11 @@
+# use whatever is in config.yaml
+scriptable run .
+
+# force threaded, 10 workers
+scriptable run . --mode threaded --workers 10
+
+# threaded but rate-limited (1 request per second)
+scriptable run . --mode threaded --workers 3 --delay 1.0
+
+# force sequential regardless of config
+scriptable run . --mode sequential
