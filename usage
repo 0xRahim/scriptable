@@ -1,3 +1,6 @@
+# Compile - run from scripable-codelib 
+pip install -e .
+
 # use whatever is in config.yaml
 scriptable run .
 
