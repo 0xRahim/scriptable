@@ -1,0 +1,1312 @@
+{
+  "version": "1.0",
+  "project": "testing-auto-init",
+  "base_url": "https://registry.npmjs.org",
+  "imported_from": "openapi",
+  "created_at": "2026-04-05T15:06:12.989920",
+  "updated_at": "2026-04-05T15:06:12.990481",
+  "collections": [
+    {
+      "id": "0cd050e1",
+      "name": "Introduction",
+      "description": "This is the API documentation for the npm registry. For information about the npm registry, website, and command-line interface (CLI), please refer to [https://docs.npmjs.com](https://docs.npmjs.com).\n",
+      "endpoint_ids": []
+    },
+    {
+      "id": "be00e364",
+      "name": "Authentication & Authorization",
+      "description": "The npm registry API supports multiple types of bearer tokens for authentication:\n\n**Token Types:**\n\n**1. npm Session Token (`npmSessionToken`)**\nTraditional npm session tokens created via `npm login`. These tokens:\n- Are tied to a user account\n- Inherit the user's permissions\n- Have limited expiration\n- **Required for:** User account management, token creation/management\n\n**2. npm Access Token (`npmAccessToken`)**\nFine-grained tokens with specific permissions:\n- Can be scoped to specific packages and organizations\n- Can be scoped to specific operations (read, write, publish)\n- Have configurable expiration\n- **Supported for:** Most package operations where explicitly documented\n\n**3. OIDC id_token (`oidcIdToken`)**\nTokens from supported Identity Providers (CI/CD systems):\n- From GitHub Actions, GitLab CI, CircleCI, etc.\n- Must have `aud` claim set to `npm:registry.npmjs.org`\n- Short-lived tokens\n- **Required for:** OIDC token exchange only\n\n**4. OIDC Exchange Token (`oidcExchangeToken`)**\nShort-lived tokens obtained from OIDC token exchange:\n- Package-scoped permissions\n- Limited lifetime (typically 1 hour)\n- **Supported for:** Package publishing and management operations\n\n**Endpoint Authorization:**\n\nEach endpoint specifies which token types are accepted via security schemes.\nSome endpoints may accept multiple token types, others are restricted to specific types.\n\n**Example:**\n- `/tokens` endpoint: Only accepts `npmSessionToken`\n- `/oidc/token/exchange` endpoint: Only accepts `oidcIdToken`\n- Package publishing: May accept `npmSessionToken`, `npmAccessToken`, or `oidcExchangeToken`\n",
+      "endpoint_ids": []
+    },
+    {
+      "id": "8b8ec7e0",
+      "name": "Tokens",
+      "description": "Token management endpoints for creating, listing, and deleting npm access tokens.\n",
+      "endpoint_ids": [
+        "b0e7c577",
+        "d499a118",
+        "42300b5f"
+      ]
+    },
+    {
+      "id": "2678ec1d",
+      "name": "OIDC",
+      "description": "OpenID Connect (OIDC) token exchange endpoints for CI/CD integrations.\n",
+      "endpoint_ids": [
+        "fef631fe"
+      ]
+    },
+    {
+      "id": "4ea1ad91",
+      "name": "Trust",
+      "description": "Trust-related endpoints for managing package trust and security settings.\n",
+      "endpoint_ids": [
+        "6230e4cb",
+        "6397aac3",
+        "5b5df017"
+      ]
+    },
+    {
+      "id": "1e318074",
+      "name": "Uncategorized",
+      "description": "",
+      "endpoint_ids": [
+        "66d76af8",
+        "23fc445f",
+        "a3dab0e1",
+        "af02790e",
+        "675428fb",
+        "64fed056",
+        "5858261f",
+        "7cc619ee",
+        "34328500",
+        "700cbbf9",
+        "1343e57e",
+        "a47fa51a",
+        "149731b6",
+        "cc3e1a81",
+        "dbeffe09",
+        "f4488b47",
+        "cdc290e6",
+        "0d031f62"
+      ]
+    }
+  ],
+  "endpoints": [
+    {
+      "id": "66d76af8",
+      "method": "GET",
+      "path": "/-/team/{orgName}/{teamName}/package",
+      "summary": "Get all packages for a team",
+      "description": "Get all of the packages a team has access to, as well as the access level that team has for each package.",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Access"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "0523a325",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "1a28b30f",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "1011a7ab",
+          "title": "Parameter pollution",
+          "description": "Duplicate query params with different values",
+          "template_hint": "",
+          "workflow_hint": "param_fuzzer"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "23fc445f",
+      "method": "PUT",
+      "path": "/-/team/{orgName}/{teamName}/package",
+      "summary": "Grant access to a package for a team",
+      "description": "",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": {
+        "content_type": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "package": {
+              "type": "string",
+              "description": "The name of the package to give access to"
+            },
+            "permissions": {
+              "type": "string",
+              "enum": [
+                "read-only",
+                "read-write"
+              ],
+              "description": "The access level of the package to grant to the team"
+            }
+          }
+        }
+      },
+      "auth_required": true,
+      "tags": [
+        "Access"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "f6b9e876",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "241e7b1b",
+          "title": "Unauthorized mutation",
+          "description": "Try PUT as lower-privileged user",
+          "template_hint": "privilege_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "86fa0374",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "a3dab0e1",
+      "method": "DELETE",
+      "path": "/-/team/{orgName}/{teamName}/package",
+      "summary": "Remove access to a package for a team",
+      "description": "",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Access"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "6dbf33e8",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "e2665884",
+          "title": "Unauthorized mutation",
+          "description": "Try DELETE as lower-privileged user",
+          "template_hint": "privilege_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "ff0fb1e4",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "af02790e",
+      "method": "GET",
+      "path": "/-/org/{orgName}/package",
+      "summary": "Get all packages for an org",
+      "description": "Get all of the packages an org has access to, as well a the access level that org has for each pacakge.",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Access"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "8e3d9be7",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "64bc0cb6",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "de46ab4b",
+          "title": "Parameter pollution",
+          "description": "Duplicate query params with different values",
+          "template_hint": "",
+          "workflow_hint": "param_fuzzer"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "675428fb",
+      "method": "GET",
+      "path": "/-/package/{escapedPackageName}/collaborators",
+      "summary": "Get all of the users that have access to a package, as well as the access level that user has for each package.",
+      "description": "",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Access"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "79f6b69b",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "736ecf33",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "f05b2dd1",
+          "title": "Parameter pollution",
+          "description": "Duplicate query params with different values",
+          "template_hint": "",
+          "workflow_hint": "param_fuzzer"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "64fed056",
+      "method": "GET",
+      "path": "/-/package/{escapedPackageName}/visibility",
+      "summary": "Get the visibility of a package.",
+      "description": "",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Access"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "5b9eb5e3",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "043e4e7f",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "0b2fe512",
+          "title": "Parameter pollution",
+          "description": "Duplicate query params with different values",
+          "template_hint": "",
+          "workflow_hint": "param_fuzzer"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "5858261f",
+      "method": "POST",
+      "path": "/-/package/{escapedPackageName}/access",
+      "summary": "Sets the various access levels for a package.",
+      "description": "",
+      "headers": {},
+      "query_params": {},
+      "body_schema": {
+        "content_type": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "access": {
+              "type": "string",
+              "enum": [
+                "public",
+                "private"
+              ],
+              "description": "Visibility of a package"
+            },
+            "publish_requires_tfa": {
+              "type": "boolean",
+              "description": "Whether publishing this package requires multifactor auth"
+            },
+            "automation_token_overrides_tfa": {
+              "type": "boolean",
+              "description": "Whether or not automation tokens override the requirement for multifactor auth"
+            }
+          }
+        }
+      },
+      "auth_required": true,
+      "tags": [
+        "Access"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "dd2a27ec",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "fc992d55",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "7cc619ee",
+      "method": "POST",
+      "path": "/-/npm/v1/security/advisories/bulk",
+      "summary": "Get advisories for packages",
+      "description": "Get advisories for a list of packages and version ranges",
+      "headers": {},
+      "query_params": {},
+      "body_schema": {
+        "content_type": "application/json",
+        "schema": {
+          "type": "object",
+          "additionalProperties": {
+            "x-additionalPropertiesName": "@npm/example-package",
+            "type": "array",
+            "description": "Array of versions for this package",
+            "items": {
+              "type": "string",
+              "description": "semver version"
+            }
+          },
+          "example": {
+            "@npmcli/arborist": [
+              "1.0.0",
+              "2.0.1"
+            ],
+            "@npmcli/config": [
+              "10.4.2"
+            ]
+          }
+        }
+      },
+      "auth_required": false,
+      "tags": [
+        "Audit"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [],
+      "notes": ""
+    },
+    {
+      "id": "fef631fe",
+      "method": "POST",
+      "path": "/-/npm/v1/oidc/token/exchange/package/{package_name}",
+      "summary": "Exchange OIDC id_token for npm registry token",
+      "description": "Exchange a valid OIDC id_token (provided as a Bearer token) for a short-lived npm registry access token for the specified package.\n\n**OIDC Token Requirements:**\n- The Bearer token must be an OIDC id_token from a [supported Identity Provider (IdP)](https://docs.npmjs.com/trusted-publishers#supported-cicd-providers)\n- The `aud` (audience) claim must be set to `npm:registry.npmjs.org`\n\n**Important:** The Bearer token must be an OIDC id_token from an Identity Provider (IdP) npm supports. This endpoint differs from the rest of the API, which expects a standard npm access token.\n",
+      "headers": {},
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "OIDC"
+      ],
+      "collection_id": "2678ec1d",
+      "attack_ideas": [
+        {
+          "id": "7eb12718",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "d5474d01",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "34328500",
+      "method": "GET",
+      "path": "/-/org/{orgName}/user",
+      "summary": "Get users in an org",
+      "description": "Get all of the users in an org, along with their access levels in that org",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Org"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "a2c3fe04",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "7ecbd066",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "90042321",
+          "title": "Parameter pollution",
+          "description": "Duplicate query params with different values",
+          "template_hint": "",
+          "workflow_hint": "param_fuzzer"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "700cbbf9",
+      "method": "PUT",
+      "path": "/-/org/{orgName}/user",
+      "summary": "Set user membership in an org",
+      "description": "Set a user's membership in an org. If the user is not already a member, an invite will be sent.",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": {
+        "content_type": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "user": {
+              "type": "string",
+              "description": "Username to grant membership to org"
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "developer",
+                "admin",
+                "owner"
+              ],
+              "description": "Role to give user in org"
+            }
+          }
+        }
+      },
+      "auth_required": true,
+      "tags": [
+        "Org"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "d69a82fe",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "ec3ee38e",
+          "title": "Unauthorized mutation",
+          "description": "Try PUT as lower-privileged user",
+          "template_hint": "privilege_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "8c78e769",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "1343e57e",
+      "method": "DELETE",
+      "path": "/-/org/{orgName}/user",
+      "summary": "Remove user membership in an org",
+      "description": "Remove a user's membership in an org",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": {
+        "content_type": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "user": {
+              "type": "string",
+              "description": "Username to remove from the org"
+            }
+          }
+        }
+      },
+      "auth_required": true,
+      "tags": [
+        "Org"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "1ee54f24",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "b766e2b3",
+          "title": "Unauthorized mutation",
+          "description": "Try DELETE as lower-privileged user",
+          "template_hint": "privilege_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "9a12bb41",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "a47fa51a",
+      "method": "GET",
+      "path": "/-/v1/search",
+      "summary": "Search for packages on the registry",
+      "description": "Search for packages on the registry",
+      "headers": {},
+      "query_params": {
+        "text": "",
+        "size": "",
+        "from": ""
+      },
+      "body_schema": null,
+      "auth_required": false,
+      "tags": [
+        "Search"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "c29ff23d",
+          "title": "Parameter pollution",
+          "description": "Duplicate query params with different values",
+          "template_hint": "",
+          "workflow_hint": "param_fuzzer"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "149731b6",
+      "method": "GET",
+      "path": "/-/org/{orgName}/team",
+      "summary": "Get teams in an org",
+      "description": "Get all of the teams in an org",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Org"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "edb7caf6",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "7af979a2",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "83092fcf",
+          "title": "Parameter pollution",
+          "description": "Duplicate query params with different values",
+          "template_hint": "",
+          "workflow_hint": "param_fuzzer"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "cc3e1a81",
+      "method": "PUT",
+      "path": "/-/org/{orgName}/team",
+      "summary": "Create a new team",
+      "description": "Create a new team for an org",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": {
+        "content_type": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the team to create"
+            },
+            "description": {
+              "type": "string",
+              "description": "The description of the team to create"
+            }
+          },
+          "example": {
+            "name": "wombats",
+            "description": "All developers"
+          }
+        }
+      },
+      "auth_required": true,
+      "tags": [
+        "Team"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "6a2fe42f",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "1359f876",
+          "title": "Unauthorized mutation",
+          "description": "Try PUT as lower-privileged user",
+          "template_hint": "privilege_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "d4ee61d3",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "dbeffe09",
+      "method": "DELETE",
+      "path": "/-/org/{orgName}/{teamName}",
+      "summary": "Delete a team",
+      "description": "Delete a team from a given org",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Team"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "8a50c482",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "ff04c9fe",
+          "title": "Unauthorized mutation",
+          "description": "Try DELETE as lower-privileged user",
+          "template_hint": "privilege_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "9c3a8796",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "f4488b47",
+      "method": "GET",
+      "path": "/-/org/{orgName}/{teamName}/user",
+      "summary": "Get all users in a team",
+      "description": "Get all users in a team",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Team"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "01cf6cd1",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "5b2b3e7f",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "96c14fae",
+          "title": "Parameter pollution",
+          "description": "Duplicate query params with different values",
+          "template_hint": "",
+          "workflow_hint": "param_fuzzer"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "cdc290e6",
+      "method": "PUT",
+      "path": "/-/org/{orgName}/{teamName}/user",
+      "summary": "Add a user to a team",
+      "description": "Add a user to a team in an org. The user must already be a member of the org.",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": {
+        "content_type": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "user": {
+              "type": "string",
+              "description": "The username of the user to add to the team"
+            }
+          },
+          "example": {
+            "user": "npm-cli-bot"
+          }
+        }
+      },
+      "auth_required": true,
+      "tags": [
+        "Team"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "8156b3bd",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "3dbad7b9",
+          "title": "Unauthorized mutation",
+          "description": "Try PUT as lower-privileged user",
+          "template_hint": "privilege_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "dd46976a",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "0d031f62",
+      "method": "DELETE",
+      "path": "/-/org/{orgName}/{teamName}/user",
+      "summary": "Remove a user from a team",
+      "description": "",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {},
+      "body_schema": {
+        "content_type": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "user": {
+              "type": "string",
+              "description": "The username of the user to remove from the team"
+            }
+          },
+          "example": {
+            "user": "npm-cli-bot"
+          }
+        }
+      },
+      "auth_required": true,
+      "tags": [
+        "Team"
+      ],
+      "collection_id": "1e318074",
+      "attack_ideas": [
+        {
+          "id": "0fe1c46f",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "4356b6f3",
+          "title": "Unauthorized mutation",
+          "description": "Try DELETE as lower-privileged user",
+          "template_hint": "privilege_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "be0ffe0f",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "b0e7c577",
+      "method": "GET",
+      "path": "/-/npm/v1/tokens",
+      "summary": "List npm access tokens",
+      "description": "List all access tokens associated with the authenticated user's account.\n\n**Requirements:**\n- Must be authenticated with a valid Bearer token\n\n**Response includes:**\n- All responses include security notices via the `npm-notice` header\n- Tokens are redacted for security: format is `npm_aBcD...7890` (first 8 chars including prefix + ... + last 4 chars)\n- Supports pagination via query parameters\n",
+      "headers": {
+        "Authorization": ""
+      },
+      "query_params": {
+        "page": "",
+        "perPage": ""
+      },
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Tokens"
+      ],
+      "collection_id": "8b8ec7e0",
+      "attack_ideas": [
+        {
+          "id": "97586578",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "8ce51f93",
+          "title": "Parameter pollution",
+          "description": "Duplicate query params with different values",
+          "template_hint": "",
+          "workflow_hint": "param_fuzzer"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "d499a118",
+      "method": "POST",
+      "path": "/-/npm/v1/tokens",
+      "summary": "Create npm access token",
+      "description": "Create a new npm access token with customizable permissions, scope restrictions,\nexpiration, and CIDR IP range limitations.\n\n**Requirements:**\n- Must be authenticated\n- **Two-factor authentication is required for this endpoint**\n  - If 2FA is enabled on your account, provide the OTP via the `npm-otp` header\n  - If 2FA is not enabled, an email OTP will be sent and must be provided via the `npm-otp` header\n  - For WebAuthn users, the OTP is returned in the `doneUrl` after authentication\n\n**Important notices:**\n- All responses include security notices via the `npm-notice` header regarding token limitations\n",
+      "headers": {
+        "Authorization": "",
+        "npm-otp": "",
+        "npm-auth-type": "",
+        "npm-command": ""
+      },
+      "query_params": {},
+      "body_schema": {
+        "content_type": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "password": {
+              "type": "string",
+              "description": "User password for authentication"
+            },
+            "name": {
+              "type": "string",
+              "description": "Human-readable name for the token"
+            },
+            "token_description": {
+              "type": "string",
+              "description": "Detailed description of token purpose",
+              "nullable": true
+            },
+            "expires": {
+              "oneOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "description": "Expiration in days (number) or ISO date string. Read-write tokens: maximum 90 days, defaults to 7 days. Read-only tokens: unlimited maximum, defaults to 30 days"
+            },
+            "bypass_2fa": {
+              "type": "boolean",
+              "description": "Allow token to bypass 2FA requirements",
+              "default": false
+            },
+            "cidr": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "IP ranges that can use this token",
+              "nullable": true
+            },
+            "packages": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Specific packages this token can access. Use [\"*\"] for all packages. Empty arrays are treated as not provided"
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Scoped packages this token can access. Empty arrays are treated as not provided"
+            },
+            "orgs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Organizations this token can access. Empty arrays are treated as not provided"
+            },
+            "packages_and_scopes_permission": {
+              "type": "string",
+              "enum": [
+                "read-only",
+                "read-write",
+                "no-access"
+              ],
+              "description": "Permission for packages and scopes. Defaults to \"read-only\" if packages/scopes arrays have length > 0, otherwise \"no-access\""
+            },
+            "orgs_permission": {
+              "type": "string",
+              "enum": [
+                "read-only",
+                "read-write",
+                "no-access"
+              ],
+              "description": "Permission for organizations. Defaults to \"read-only\" if orgs array has length > 0, otherwise \"no-access\""
+            }
+          },
+          "required": [
+            "password",
+            "name"
+          ]
+        }
+      },
+      "auth_required": true,
+      "tags": [
+        "Tokens"
+      ],
+      "collection_id": "8b8ec7e0",
+      "attack_ideas": [
+        {
+          "id": "bb11c232",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "42300b5f",
+      "method": "DELETE",
+      "path": "/-/npm/v1/tokens/token/{token}",
+      "summary": "Delete npm access token",
+      "description": "Delete an npm access token. The token can be specified as:\n- A UUID (token identifier)\n- An npm-prefixed token (format: `npm_` followed by 36 alphanumeric characters)\n\n**Requirements:**\n- Must be authenticated with a valid Bearer token\n- May require 2FA OTP depending on user settings\n\n**Web authentication flow:**\n- When `npm-auth-type=web` and `npm-command=token` headers are present and 2FA is required,\n  returns authentication URLs instead of an error\n",
+      "headers": {
+        "Authorization": "",
+        "npm-otp": "",
+        "npm-auth-type": "",
+        "npm-command": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Tokens"
+      ],
+      "collection_id": "8b8ec7e0",
+      "attack_ideas": [
+        {
+          "id": "9c50adb8",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "15e3f1c1",
+          "title": "Unauthorized mutation",
+          "description": "Try DELETE as lower-privileged user",
+          "template_hint": "privilege_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "834bcaf5",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "6230e4cb",
+      "method": "GET",
+      "path": "/-/package/{package}/trust",
+      "summary": "Get all trusted publisher configurations for package",
+      "description": "Retrieve all trusted publisher configurations for a package.\n\nThis endpoint allows users with write permission to the package to view all existing trusted publisher\nconfigurations that have been set up for OIDC token exchange for their package.\n\n## Configuration Structure\n\nThe structure of the payload follows a specific design. Each trusted provider has their own unique set of claims.\nIn order to keep things clear and consistent, the properties to create a provider match the claims structure.\nThe caveat is when a claim requires partial matching through parsing.\n\n- All configurations MUST include a `type` and `claims` object\n- Top-level \"claims\" MUST match the cloud provider's exact claim properties\n- Claims MAY use exact string matching when supported\n- Claims MAY use an object structure to define one or multiple partial matching rules\n- Partial matching properties MUST be defined and documented by this API specification\n- This documentation SHALL only provide matches for specifically defined claim items\n\n## Requirements\n- Package MUST exist\n- User MUST have write permission to the package\n- MUST have 2FA enabled on their account\n- User MUST be authenticated\n",
+      "headers": {
+        "Authorization": "",
+        "npm-otp": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Trust"
+      ],
+      "collection_id": "4ea1ad91",
+      "attack_ideas": [
+        {
+          "id": "c82301b6",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "6b15708f",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "b30b853b",
+          "title": "Parameter pollution",
+          "description": "Duplicate query params with different values",
+          "template_hint": "",
+          "workflow_hint": "param_fuzzer"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "6397aac3",
+      "method": "POST",
+      "path": "/-/package/{package}/trust",
+      "summary": "Add trusted publisher configuration for package",
+      "description": "Configure trusted publisher settings for a package to enable OIDC token exchange.\n\nThis endpoint allows users with write permission to the package to establish trust with CI/CD providers\n(GitHub Actions, GitLab CI, CircleCI, etc.) so that those services can publish to the package\nwithout requiring long-lived npm tokens.\n\n## Requirements\n- Package MUST exist\n- User MUST have write permission to the package\n- MUST have 2FA enabled on their account\n- User MUST be authenticated\n",
+      "headers": {
+        "Authorization": "",
+        "npm-otp": ""
+      },
+      "query_params": {},
+      "body_schema": {
+        "content_type": "application/json",
+        "schema": {
+          "$ref": "#/components/schemas/OidcConfigsCreate"
+        }
+      },
+      "auth_required": true,
+      "tags": [
+        "Trust"
+      ],
+      "collection_id": "4ea1ad91",
+      "attack_ideas": [
+        {
+          "id": "cb0788af",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "6a6e1ee1",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "5b5df017",
+      "method": "DELETE",
+      "path": "/-/package/{package}/trust/{config-uuid}",
+      "summary": "Delete trusted publisher configuration",
+      "description": "Delete a specific trusted publisher configuration for a package by its UUID.\n\nThis endpoint allows users with write permission to the package to remove an existing trusted publisher\nconfiguration that was previously set up for OIDC token exchange.\n\n## Requirements\n- Package MUST exist\n- User MUST have write permission to the package\n- MUST have 2FA enabled on their account\n- User MUST be authenticated\n",
+      "headers": {
+        "Authorization": "",
+        "npm-otp": ""
+      },
+      "query_params": {},
+      "body_schema": null,
+      "auth_required": true,
+      "tags": [
+        "Trust"
+      ],
+      "collection_id": "4ea1ad91",
+      "attack_ideas": [
+        {
+          "id": "03457169",
+          "title": "Auth bypass",
+          "description": "Try accessing without Authorization header",
+          "template_hint": "auth_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "9256422f",
+          "title": "Unauthorized mutation",
+          "description": "Try DELETE as lower-privileged user",
+          "template_hint": "privilege_check",
+          "workflow_hint": ""
+        },
+        {
+          "id": "38bbc746",
+          "title": "IDOR",
+          "description": "Enumerate path parameters \u2014 try other users' IDs",
+          "template_hint": "idor_check",
+          "workflow_hint": ""
+        }
+      ],
+      "notes": ""
+    }
+  ],
+  "global_attack_ideas": [
+    {
+      "id": "bb7a88f4",
+      "title": "CORS misconfiguration",
+      "description": "Test origin reflection across all endpoints",
+      "template_hint": "",
+      "workflow_hint": "cors_bypass"
+    },
+    {
+      "id": "d844a5ed",
+      "title": "Rate limiting absent",
+      "description": "Hammer sensitive endpoints \u2014 login, token creation",
+      "template_hint": "rate_limit_check",
+      "workflow_hint": ""
+    },
+    {
+      "id": "c2f5fee1",
+      "title": "Mass assignment",
+      "description": "Send unexpected fields in POST/PUT bodies",
+      "template_hint": "",
+      "workflow_hint": ""
+    },
+    {
+      "id": "c459cef2",
+      "title": "JWT algorithm confusion",
+      "description": "Try alg:none or RS256\u2192HS256 swap on JWT tokens",
+      "template_hint": "",
+      "workflow_hint": ""
+    },
+    {
+      "id": "3d09272a",
+      "title": "Stale token acceptance",
+      "description": "Use expired/revoked tokens \u2014 check if still accepted",
+      "template_hint": "",
+      "workflow_hint": ""
+    }
+  ],
+  "global_workflow_ideas": [
+    "cors_bypass",
+    "parameter_fuzzer",
+    "auth_token_expiry",
+    "privilege_escalation",
+    "rate_limit_check"
+  ],
+  "notes": ""
+}
