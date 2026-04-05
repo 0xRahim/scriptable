@@ -1,5 +1,7 @@
 # Scriptable
 
+![logo](https://raw.githubusercontent.com/0xRahim/scriptable/refs/heads/main/logo.png)
+
 Scriptable is an API security testing framework built for fast, repeatable testing.
 
 It lets you:
