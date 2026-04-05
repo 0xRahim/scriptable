@@ -1,14 +1,15 @@
-# Compile - run from scripable-codelib 
-pip install -e .
+# create a new project interactively
+scriptable new my-api-project
 
-# use whatever is in config.yaml
+# import openapi docs into it
+cd my-api-project
+scriptable import openapi ../openapi.json
+
+# import from caido, filter to one host
+scriptable import caido ../caido_export.json --host registry.npmjs.org
+
+# view docs summary
+scriptable docs .
+
+# run as usual
 scriptable run .
-
-# force threaded, 10 workers
-scriptable run . --mode threaded --workers 10
-
-# threaded but rate-limited (1 request per second)
-scriptable run . --mode threaded --workers 3 --delay 1.0
-
-# force sequential regardless of config
-scriptable run . --mode sequential

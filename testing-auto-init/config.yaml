@@ -1,0 +1,23 @@
+project: "testing-auto-init"
+
+targets:
+  - name: "dev"
+    url: "https://registry.npmjs.org/"
+    headers:
+      Authorization: "Bearer ${TOKEN}"
+    params: {}
+    extra:
+      member_token: "${MEMBER_TOKEN}"
+      member_id: "${MEMBER_ID}"
+
+run:
+  templates: all
+  workflows: all
+
+skip:
+  templates: []
+
+execution:
+  mode: sequential        # or: threaded
+  max_workers: 5
+  delay: 0.0
