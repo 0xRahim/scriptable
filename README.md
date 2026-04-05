@@ -1,95 +1,81 @@
 # Scriptable
+<p align="center">
+  <img src="https://raw.githubusercontent.com/0xRahim/scriptable/refs/heads/main/logo.png" width="150" alt="Scriptable Logo">
+</p>
 
-![logo](https://raw.githubusercontent.com/0xRahim/scriptable/refs/heads/main/logo.png)
+**Scriptable** is an API security testing framework designed for speed, modularity, and AI-assisted automation. It transforms API attack vectors into repeatable, automated workflows.
 
-Scriptable is an API security testing framework built for fast, repeatable testing.
+---
 
-It lets you:
-- run generic security checks out of the box
-- write your own custom tests and workflows
-- import API documentation from `openapi.json`
-- import request history from Caido exports
+## 🚀 Key Features
 
-## Installation
+* **Modular Architecture**: Run generic security templates or author custom test logic.
+* **AI-Ready**: Designed to turn high-level attack ideas into functional test code.
+* **Deep Integration**:
+    * Import **OpenAPI/Swagger** documentation (`openapi.json`).
+    * Import request history from **Caido** exports.
+* **CLI-First**: Manage projects, documentation, and scans directly from your terminal.
 
-Clone the repository and install the local package:
+---
+
+## 🛠 Installation
+
+Clone the repository and install the package in editable mode:
 
 ```bash
-git clone [<repo-url>](https://github.com/0xRahim/scriptable)
-cd scriptable
-cd scriptable-codelib
+git clone [https://github.com/0xRahim/scriptable](https://github.com/0xRahim/scriptable)
+cd scriptable/scriptable-codelib
 pip install -e .
-cd ..
 ```
-After that, you can use scriptable from the project root or from anywhere in your shell, depending on your environment.
 
-### Create a new project
+---
 
+## 📖 Quick Start Guide
+
+### 1. Initialize a Project
+Create a new Scriptable project interactively:
 ```bash
 scriptable new my-api-project
+cd my-api-project
 ```
 
-This creates a new Scriptable project interactively.
+### 2. Populate the Request Library
+You can import targets from your existing documentation or proxy history:
 
-### Import API documentation
-**From OpenAPI**
+**From OpenAPI Specification:**
 ```bash
-cd my-api-project
 scriptable import openapi ../openapi.json
 ```
 
-**From Caido export**
-```bash
-scriptable import caido ../caido_export.json --host registry.npmjs.org
-```
-The --host flag filters imported traffic to a single host.
-
-### View documentation summary
-```bash
-scriptable docs .
-```
-
-### Run tests
-```bash
-scriptable run .
-```
-
-**Typical workflow**
-
-# create a new project interactively
-```bash
-scriptable new my-api-project
-```
-
-# import openapi docs into it
-```bash
-cd my-api-project
-scriptable import openapi ../openapi.json
-```
-
-# import from caido, filter to one host
+**From Caido Export (Filtered by Host):**
 ```bash
 scriptable import caido ../caido_export.json --host registry.npmjs.org
 ```
 
-# view docs summary
-```bash
-scriptable docs .
-```
+### 3. Analyze & Execute
+View a summary of your imported endpoints or launch the test suite:
 
-# run as usual
 ```bash
+# View documentation summary
+scriptable docs .
+
+# Execute all active templates
 scriptable run .
 ```
 
-# Features
-- Generic API security tests
-- Custom test authoring
-- OpenAPI import support
-- Caido history import support
-- Project-based workflow
-- CLI-first usage
+---
 
-# Project goal
+## 🎯 Project Goal
 
-Scriptable is designed to be used with AI for turning API attack vector ideas into automated workflow codes , scanning apis with generic templates for common issues for fast API testing.
+> **Scriptable** aims to bridge the gap between manual pentesting and automated scanning. By utilizing generic templates for common issues and providing a platform for custom code, it allows researchers to rapidly scale API security audits.
+
+---
+
+### 🛡️ Common Usage Summary
+| Task | Command |
+| :--- | :--- |
+| **New Project** | `scriptable new <name>` |
+| **Import Docs** | `scriptable import openapi <path>` |
+| **Import Proxy** | `scriptable import caido <path> --host <host>` |
+| **Audit Docs** | `scriptable docs .` |
+| **Run Scan** | `scriptable run .` |
